@@ -1,0 +1,6 @@
+     ./child/node_modules
+     ./host/node_modules
+     npm-debug.log
+     yarn-debug.log*
+     .env
+     .DS_Store
