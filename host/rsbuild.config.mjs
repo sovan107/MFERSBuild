@@ -9,15 +9,18 @@ export default defineConfig({
       name: 'host',
       remotes: {
         child: 'child@http://localhost:3001/remoteEntry.js',
+        child18: 'child18@http://localhost:3002/remoteEntry.js',
       },
       shared: {
         react: {
           singleton: true,
-          requiredVersion: false,
+          requiredVersion: '^19.0.0',
+          strictVersion: true,
         },
         'react-dom': {
           singleton: true,
-          requiredVersion: false,
+          requiredVersion: '^19.0.0',
+          strictVersion: true,
         },
       },
     }),

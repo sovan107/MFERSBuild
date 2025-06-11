@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     pluginReact(),
     pluginModuleFederation({
-      name: 'child',
+      name: 'child18',
       filename: 'remoteEntry.js',
       exposes: {
         './App': './src/App.jsx',
@@ -24,6 +24,6 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3001,
+    port: 3002,
   },
 });

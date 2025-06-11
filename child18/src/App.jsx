@@ -2,7 +2,7 @@ import React, { version, useState } from 'react';
 
 function App() {
   const [count, setCount] = useState(0);
-  const [message, setMessage] = useState('Hello from Child App!');
+  const [message, setMessage] = useState('Hello from Child App! --18');
 
   return (
     <div style={{ 
