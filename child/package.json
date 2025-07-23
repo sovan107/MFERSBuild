@@ -9,8 +9,9 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
     "@module-federation/rsbuild-plugin": "0.15.0",

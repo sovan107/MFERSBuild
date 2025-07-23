@@ -13,12 +13,14 @@ export default defineConfig({
       },
       shared: {
         react: {
-          singleton: true,
-          requiredVersion: '^19.0.0',
+          singleton: false,
+          version: '17.0.2',
+          requiredVersion: '^17.0.2',
         },
         'react-dom': {
-          singleton: true,
-          requiredVersion: '^19.0.0',
+          singleton: false,
+          version: '17.0.2',
+          requiredVersion: '^17.0.2',
         },
       },
     }),

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Module Federation</title>
+</head>
+<body>
+    <h1>Module Federation Debug Test</h1>
+    <div id="test-container"></div>
+    
+    <script>
+        console.log('Starting module federation test...');
+        
+        // Test if we can load the remote entry
+        async function testRemoteEntry() {
+            try {
+                console.log('Loading remote entry from http://localhost:3001/remoteEntry.js');
+                
+                // Load the remote entry script
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'http://localhost:3001/remoteEntry.js';
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+                
+                console.log('Remote entry loaded successfully');
+                console.log('Available globals:', Object.keys(window).filter(key => key.includes('child') || key.includes('FEDERATION')));
+                
+                // Check if child global is available
+                if (window.child) {
+                    console.log('Child global found:', window.child);
+                    
+                    // Try to get the bootstrap module
+                    try {
+                        const container = await window.child.get('./bootstrap');
+                        console.log('Bootstrap module loaded:', container);
+                        
+                        // Try to use mount/unmount
+                        if (container && container.mount && container.unmount) {
+                            console.log('Mount/unmount functions found!');
+                            const testDiv = document.getElementById('test-container');
+                            container.mount(testDiv);
+                            console.log('Child app mounted successfully!');
+                        } else {
+                            console.error('Mount/unmount functions not found in bootstrap module');
+                        }
+                    } catch (bootstrapError) {
+                        console.error('Error loading bootstrap module:', bootstrapError);
+                    }
+                } else {
+                    console.error('Child global not found');
+                }
+                
+            } catch (error) {
+                console.error('Error loading remote entry:', error);
+            }
+        }
+        
+        // Run the test
+        testRemoteEntry();
+    </script>
+</body>
+</html>
