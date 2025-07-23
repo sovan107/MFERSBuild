@@ -1,90 +1,94 @@
-import React, { version, useState } from 'react';
+import React, { version, useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import './App.css';
+import Navigation from './components/Navigation';
+import Home from './components/Home';
+import About from './components/About';
+import Products from './components/Products';
 
-function App() {
-  const [count, setCount] = useState(0);
-  const [message, setMessage] = useState('Hello from Child App! --18');
+// Wrapper component to handle navigation logic
+function AppContent({ searchKeyword, onNavigateToProducts }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const previousSearchKeyword = React.useRef('');
+
+  useEffect(() => {
+    // Only navigate to products if we have a new search keyword
+    if (searchKeyword && searchKeyword !== previousSearchKeyword.current) {
+      previousSearchKeyword.current = searchKeyword;
+      
+      // Only navigate if we're not already on the products page
+      if (location.pathname !== '/products') {
+        navigate('/products');
+      }
+      
+      if (onNavigateToProducts) {
+        onNavigateToProducts();
+      }
+    }
+  }, [searchKeyword, navigate, location.pathname, onNavigateToProducts]);
 
   return (
     <div style={{ 
       padding: '20px', 
-      backgroundColor: '#e8f8f5', 
+      backgroundColor: '#f5f5f5', 
       borderRadius: '8px',
-      border: '1px solid #1abc9c'
+      minHeight: '600px'
     }}>
-      <h3 style={{ color: '#16a085', marginTop: '0' }}>🎯 Remote Child Component {version}</h3>
-      
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ color: '#2c3e50', fontWeight: 'bold' }}>{message}</p>
-        <input 
-          type="text" 
-          value={message} 
-          onChange={(e) => setMessage(e.target.value)}
-          style={{
-            padding: '8px 12px',
-            border: '2px solid #1abc9c',
-            borderRadius: '4px',
-            width: '100%',
-            fontSize: '14px'
-          }}
-        />
-      </div>
-      
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '15px',
-        marginBottom: '15px'
+      <div style={{
+        backgroundColor: 'white',
+        padding: '20px',
+        borderRadius: '8px',
+        border: '1px solid #ddd',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
       }}>
-        <button 
-          onClick={() => setCount(count - 1)}
-          style={{
-            backgroundColor: '#e74c3c',
-            color: 'white',
-            border: 'none',
-            padding: '8px 16px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          -
-        </button>
-        
-        <span style={{ 
-          fontSize: '24px', 
-          fontWeight: 'bold', 
-          color: '#2c3e50',
-          minWidth: '50px',
+        <h2 style={{ 
+          color: '#2c3e50', 
+          marginTop: '0',
+          marginBottom: '10px',
           textAlign: 'center'
         }}>
-          {count}
-        </span>
+          🎯 Child18 Microfrontend (React {version})
+        </h2>
+        <p style={{
+          textAlign: 'center',
+          color: '#7f8c8d',
+          fontSize: '14px',
+          marginBottom: '20px'
+        }}>
+          A React 18 microfrontend with routing capabilities loaded via Module Federation
+          {searchKeyword && (
+            <span style={{ 
+              display: 'block', 
+              color: '#e67e22', 
+              fontWeight: 'bold',
+              marginTop: '5px'
+            }}>
+              🔍 Active Search: "{searchKeyword}"
+            </span>
+          )}
+        </p>
         
-        <button 
-          onClick={() => setCount(count + 1)}
-          style={{
-            backgroundColor: '#27ae60',
-            color: 'white',
-            border: 'none',
-            padding: '8px 16px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          +
-        </button>
-      </div>
-      
-      <div style={{
-        fontSize: '12px',
-        color: '#7f8c8d',
-        fontStyle: 'italic',
-        textAlign: 'center'
-      }}>
-        This component is loaded via Module Federation from port 3001
+        <Navigation searchKeyword={searchKeyword} />
+        
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/products" element={<Products searchKeyword={searchKeyword} />} />
+        </Routes>
       </div>
     </div>
+  );
+}
+
+function App({ searchKeyword, onNavigateToProducts }) {
+  return (
+    <Router>
+      <AppContent 
+        searchKeyword={searchKeyword} 
+        onNavigateToProducts={onNavigateToProducts}
+      />
+    </Router>
   );
 }
 
